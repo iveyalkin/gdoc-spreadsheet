@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	init();
+	$('#score-table').hide();
+	$('#loading').show();
 });
 
 var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/16iTA7Pz1gAiqAsmrxt6W9Xr_2fUmfwWxhhaniznv4_g/pubhtml';//'https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0AmYzu_s7QHsmdDNZUzRlYldnWTZCLXdrMXlYQzVxSFE&output=html';
@@ -11,8 +13,6 @@ function init() {
 }
 
 function showInfo(data, tabletop) {
-	alert("Successfully processed!");
-
 	var colNames = data["По неделям"].column_names;
 	var colLength = colNames.length;
 	var rawElements = data["По неделям"].elements;
@@ -121,5 +121,8 @@ function styleTable(table) {
 				return;
 			}
 		});
-	});  
+	});
+
+	$('#loading').hide();
+	table.show();
 }
