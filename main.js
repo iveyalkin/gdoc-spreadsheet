@@ -102,27 +102,59 @@ function buildTable(dataModel, weeks, sortedScore) {
 		rowCounter ++;
 	}
 	return scoreTable;
-}
+} 
+
+var lastSelectedSubject = "";
 
 function styleTable(table) {
-	table.find(".subject_name").hover(function(e) {
-		$(this).addClass('highlight');  
-		$(this).attr('class').split(/\s+/g).forEach(function(entry) {
-			if ("subject_name" != entry) {
-				table.find("." + entry).addClass('highlight');
-				return;
-			}
-		});
+	var subjectName = table.find(".subject_name");
+	subjectName.click(function(e) {
+		var subjectClassName = getCssClasses($(this))[1];
+		if ("" == lastSelectedSubject) {
+			lastSelectedSubject = subjectClassName;
+		} else if (subjectClassName == lastSelectedSubject) {
+			removeHighlight($(this), table);
+			lastSelectedSubject = "";
+		} else {
+			removeHighlight(table.find(".subject_name." + lastSelectedSubject), table);
+			addHighlight($(this), table);
+			lastSelectedSubject = subjectClassName;
+		}
+	});
+	subjectName.hover(function(e) {
+		if ("" == lastSelectedSubject) {
+			addHighlight($(this), table);
+		}
     }, function(e) {  
-    	$(this).removeClass('highlight');  
-    	$(this).attr('class').split(/\s+/g).forEach(function(entry) {
-			if ("subject_name" != entry) {
-				table.find("." + entry).removeClass('highlight');
-				return;
-			}
-		});
+    	if ("" == lastSelectedSubject) {
+    		removeHighlight($(this), table);
+    	}
 	});
 
 	$('#loading').hide();
 	table.show();
+}
+
+function getCssClasses(elem) {
+	return elem.attr('class').split(/\s+/g);
+}
+
+function addHighlight(elem, table) {
+	elem.addClass('highlight');  
+	getCssClasses(elem).forEach(function(entry) {
+		if ("subject_name" != entry) {
+			table.find("." + entry).addClass('highlight');
+			return;
+		}
+	});
+}
+
+function removeHighlight(elem, table) {
+	elem.removeClass('highlight');  
+	getCssClasses(elem).forEach(function(entry) {
+		if ("subject_name" != entry) {
+			table.find("." + entry).removeClass('highlight');
+			return;
+		}
+	});
 }
